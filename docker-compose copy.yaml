@@ -1,0 +1,29 @@
+version: '3'
+
+name: pizza_chatbot
+services:
+
+  pizza_db:
+    image: postgres
+    restart: always
+    container_name: ${POSTGRES_HOST}
+    env_file:
+      - .env
+    volumes:
+      - /opt/pizza_postgres:/var/lib/postgresql
+
+  pizza_bot:
+    build:
+      context: .
+      dockerfile: bot/Dockerfile
+    image: pizza_bot
+    container_name: pizza_bot
+    links:
+      - pizza_db
+    env_file:
+      - .env
+    volumes:
+      - ${LOGS_PATH}:${LOGS_PATH}
+    restart: always
+    tty: True
+    working_dir: /bot
