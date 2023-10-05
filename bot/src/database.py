@@ -1,6 +1,6 @@
 
 from sqlalchemy import create_engine
-from sqlalchemy import Column, String, BigInteger, DateTime
+from sqlalchemy import Column, String, BigInteger, DateTime, Integer, JSON
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.engine.url import URL
 from sqlalchemy.ext.declarative import declarative_base
@@ -16,6 +16,27 @@ class User(base):
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     tg_id = Column(BigInteger)
     username = Column(String(256))
+    created_at = Column(DateTime)
+
+
+class Product(base):
+    __tablename__ = 'products'
+
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    name = Column(String(256))
+    image = Column(DateTime)
+    description = Column(DateTime)
+    cost = Column(Integer)
+
+
+class Order(base):
+    __tablename__ = 'orders'
+
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    tg_id = Column(BigInteger)
+    username = Column(String(256))
+    basket = Column(JSON)
+    geo = Column(String(512))
     created_at = Column(DateTime)
 
 

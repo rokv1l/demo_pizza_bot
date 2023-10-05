@@ -1,7 +1,8 @@
 
 import src.logger_config
+import src.db_init
 
-from src.telegram_api import app, job_queue
+from src.telegram_api import app
 
 from loguru import logger
 
