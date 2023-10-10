@@ -16,6 +16,7 @@ class User(base):
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     tg_id = Column(BigInteger)
     username = Column(String(256))
+    phone = Column(String(256))
     created_at = Column(DateTime)
 
 
