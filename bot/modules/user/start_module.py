@@ -18,7 +18,7 @@ async def start_callback(update: Update, context: CallbackContext) -> None:
                 .filter(User.tg_id == update.effective_chat.id)
                 .first()
             )
-            if user.phone:
+            if user and user.phone:
                 context.user_data["is_authorized"] = True
                 await update.effective_chat.send_message(user_messages["start_0"])
                 return
@@ -41,7 +41,7 @@ async def contact_callback(update: Update, context: CallbackContext) -> None:
             .filter(User.tg_id == update.effective_chat.id)
             .first()
         )
-        if user.phone:
+        if user and user.phone:
             context.user_data["is_authorized"] = True
             await update.effective_chat.send_message(user_messages["start_0"])
             return
