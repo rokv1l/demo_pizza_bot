@@ -43,7 +43,7 @@ async def menu_send_msg(update: Update, context: CallbackContext) -> None:
     keyboard += [InlineKeyboardButton("Выход", callback_data="exit")]
     text = products[index]["name"] + "\n\n"
     text += products[index]["description"] + "\n\n"
-    text += "Цена: " + products[index]["cost"] + "руб."
+    text += f"Цена: {products[index]['cost']} руб."
     with open(products[index]["img"], "rb") as f:
         context.user_data["msg_for_del_keys"] = await update.effective_chat.send_photo(
             f, text, reply_markup=InlineKeyboardMarkup(keyboard)
@@ -117,13 +117,16 @@ async def add_to_basket_callback(update: Update, context: CallbackContext):
 async def go_to_basket_callback(update: Update, context: CallbackContext):
     await delete_old_keyboard(context, update.effective_chat.id)
     texts = []
+    total_cost = 0
     for index, set_ in enumerate(context.user_data["products"]):
         text = str(index) + ") " + set_[0]["name"] + "\n"
         text += set_[0]["description"] + "\n"
-        text += set_[0]["cost"] + "\n"
+        text += f"{set_[0]['cost']} руб.\n"
         text += "Кол-во: " + set_[1]
         texts.append(text)
-    text = "________________________________".join(texts)
+        total_cost += set_[0]["cost"]
+    texts.append(f"Итоговая цена: {total_cost}")
+    text = "\n________________________________\n".join(texts)
     keyboard = [
         [InlineKeyboardButton("Изменить позицию " + str(i), callback_data=i)]
         for i in range(0, len(texts))

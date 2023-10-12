@@ -13,4 +13,5 @@ if __name__ == "__main__":
     app.add_handler(user.start_handler)
     app.add_handler(user.menu_handler)
     app.add_handler(user.contact_auth_handler)
+    app.add_handler(user.orders_history_handler)
     app.run_polling()
