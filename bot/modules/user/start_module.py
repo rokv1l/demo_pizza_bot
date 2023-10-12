@@ -5,6 +5,7 @@ from telegram.ext import CommandHandler, MessageHandler, CallbackContext, filter
 
 from config import user_messages
 from src.database import session_maker, User
+from src.telegram_utils import delete_old_keyboard
 
 
 async def start_callback(update: Update, context: CallbackContext) -> None:
@@ -24,12 +25,13 @@ async def start_callback(update: Update, context: CallbackContext) -> None:
                 return
         keyboard = []
         keyboard.append([KeyboardButton("Отправить контакт", request_contact=True)])
-        await update.effective_chat.send_message(
+        context.user_data["msg_for_del_keys"] = await update.effective_chat.send_message(
             user_messages["start_1"], reply_markup=ReplyKeyboardMarkup(keyboard)
         )
 
 
 async def contact_callback(update: Update, context: CallbackContext) -> None:
+    await delete_old_keyboard(context, update.effective_chat.id)
     is_authorized = context.user_data.get("is_authorized")
     if is_authorized:
         await update.effective_chat.send_message(user_messages["start_0"])
