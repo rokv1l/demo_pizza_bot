@@ -17,7 +17,7 @@ def user_access_control(func):
                 .first()
             )
             if user.phone:
-                return func(update, context)
+                return await func(update, context)
             else:
                 keyboard = []
                 keyboard.append(

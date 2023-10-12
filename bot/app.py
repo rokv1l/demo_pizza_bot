@@ -12,4 +12,5 @@ if __name__ == "__main__":
     logger.info("Inializing complete, bot starting")
     app.add_handler(user.start_handler)
     app.add_handler(user.menu_handler)
+    app.add_handler(user.contact_auth_handler)
     app.run_polling()

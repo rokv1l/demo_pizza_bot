@@ -2,13 +2,11 @@
 from telegram import Update
 from telegram.ext import ConversationHandler, CommandHandler, MessageHandler, CallbackQueryHandler, CallbackContext, filters
 
-
-def ask_contact_send_msg(update: Update, context: CallbackContext) -> int:
-    # Отправьте контакт
-    pass
+from .utils import user_access_control
 
 
-def menu_fill_order_controller(update: Update, context: CallbackContext):
+@user_access_control
+async def menu_fill_order_controller(update: Update, context: CallbackContext):
     pass
 
 

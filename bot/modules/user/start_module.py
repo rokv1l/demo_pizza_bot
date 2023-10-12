@@ -23,7 +23,7 @@ async def start_callback(update: Update, context: CallbackContext) -> None:
                 await update.effective_chat.send_message(user_messages["start_0"])
                 return
         keyboard = []
-        keyboard.append(KeyboardButton("Отправить контакт", request_contact=True))
+        keyboard.append([KeyboardButton("Отправить контакт", request_contact=True)])
         await update.effective_chat.send_message(
             user_messages["start_1"], reply_markup=ReplyKeyboardMarkup(keyboard)
         )
