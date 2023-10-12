@@ -1,6 +1,6 @@
 
 from sqlalchemy import create_engine
-from sqlalchemy import Column, String, BigInteger, DateTime, Integer, JSON
+from sqlalchemy import Column, String, BigInteger, DateTime, Integer, JSON, Text
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.engine.url import URL
 from sqlalchemy.ext.declarative import declarative_base
@@ -37,7 +37,7 @@ class Order(base):
     tg_id = Column(BigInteger)
     username = Column(String(256))
     basket = Column(JSON)
-    geo = Column(String(512))
+    geo = Column(Text)
     created_at = Column(DateTime)
 
 
