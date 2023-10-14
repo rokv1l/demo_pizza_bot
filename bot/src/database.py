@@ -1,6 +1,6 @@
 
 from sqlalchemy import create_engine
-from sqlalchemy import Column, String, BigInteger, DateTime, Integer, JSON, Text
+from sqlalchemy import Column, String, BigInteger, DateTime, Integer, JSON, Text, Boolean
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.engine.url import URL
 from sqlalchemy.ext.declarative import declarative_base
@@ -18,6 +18,7 @@ class User(base):
     username = Column(String(256))
     phone = Column(String(256))
     created_at = Column(DateTime)
+    is_manager = Column(Boolean)
 
 
 class Product(base):
@@ -38,6 +39,8 @@ class Order(base):
     username = Column(String(256))
     basket = Column(JSON)
     geo = Column(Text)
+    status = Column(String(128), default="Создан")
+    phone = Column(String(256))
     created_at = Column(DateTime)
 
 

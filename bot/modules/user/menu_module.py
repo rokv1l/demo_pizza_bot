@@ -19,7 +19,7 @@ from telegram.ext import (
 from . import states
 from config import user_messages
 from .utils import user_access_control
-from src.database import session_maker, Product, Order
+from src.database import session_maker, Product, Order, User
 from src.telegram_utils import delete_old_keyboard
 
 
@@ -212,14 +212,18 @@ async def back_to_basket_callback(update: Update, context: CallbackContext) -> i
 async def make_order_callback(update: Update, context: CallbackContext) -> None:
     await delete_old_keyboard(context, update.effective_chat.id)
     geodata_ = update.message.location
-    order_ = Order(
-        tg_id=update.effective_chat.id,
-        username=update.effective_chat.username,
-        basket=context.user_data["products"],
-        geo=geodata_,
-        created_at=datetime.now(),
-    )
     with session_maker() as session:
+        user = (
+            session.query(User).filter(User.tg_id == update.effective_chat.id).first()
+        )
+        order_ = Order(
+            tg_id=update.effective_chat.id,
+            username=update.effective_chat.username,
+            basket=context.user_data["products"],
+            geo=geodata_,
+            phone=user.phone,
+            created_at=datetime.now(),
+        )
         session.add(order_)
         session.commit()
     await update.effective_chat.send_message(user_messages["make_order_callback_0"])

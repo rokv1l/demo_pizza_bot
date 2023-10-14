@@ -17,6 +17,7 @@ def user_access_control(func):
                 .first()
             )
             if user.phone:
+                context.user_data["is_authorized"] = True
                 return await func(update, context)
             else:
                 keyboard = []
