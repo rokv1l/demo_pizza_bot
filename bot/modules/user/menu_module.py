@@ -6,6 +6,7 @@ from telegram import (
     InlineKeyboardMarkup,
     KeyboardButton,
     ReplyKeyboardMarkup,
+    InputMedia
 )
 from telegram.ext import (
     ConversationHandler,
@@ -23,7 +24,7 @@ from src.database import session_maker, Product, Order, User
 from src.telegram_utils import delete_old_keyboard
 
 
-async def menu_send_msg(update: Update, context: CallbackContext) -> None:
+async def menu_send_msg(update: Update, context: CallbackContext, edit=False) -> None:
     await delete_old_keyboard(context, update.effective_chat.id)
     products = context.user_data["products"]
     index = context.user_data["index"]
@@ -40,14 +41,20 @@ async def menu_send_msg(update: Update, context: CallbackContext) -> None:
     keyboard.append(
         [InlineKeyboardButton("Перейти в корзину", callback_data="go_to_basket")]
     )
-    keyboard += [InlineKeyboardButton("Выход", callback_data="exit")]
+    keyboard.append([InlineKeyboardButton("Выход", callback_data="exit")])
     text = products[index]["name"] + "\n\n"
     text += products[index]["description"] + "\n\n"
     text += f"Цена: {products[index]['cost']} руб."
-    with open(products[index]["img"], "rb") as f:
-        context.user_data["msg_for_del_keys"] = await update.effective_chat.send_photo(
-            f, text, reply_markup=InlineKeyboardMarkup(keyboard)
-        )
+    if edit:
+        with open(products[index]["image"], "rb") as f:
+            media = InputMedia("InputMediaPhoto", f)
+            await update.callback_query.message.edit_media(media)
+            await update.callback_query.message.edit_caption(text, reply_markup=InlineKeyboardMarkup(keyboard))
+    else:
+        with open(products[index]["image"], "rb") as f:
+            context.user_data["msg_for_del_keys"] = await update.effective_chat.send_photo(
+                f, text, reply_markup=InlineKeyboardMarkup(keyboard)
+            )
 
 
 @user_access_control
@@ -74,7 +81,7 @@ async def menu_entry_point(update: Update, context: CallbackContext) -> None:
 
 
 async def menu_courusel_callback(update: Update, context: CallbackContext):
-    await delete_old_keyboard(context, update.effective_chat.id)
+    # await delete_old_keyboard(context, update.effective_chat.id)
     data = update.callback_query.data
     products = context.user_data["products"]
     if data == "<":
@@ -87,7 +94,7 @@ async def menu_courusel_callback(update: Update, context: CallbackContext):
             context.user_data["index"] = len(products) - 1
         else:
             context.user_data["index"] -= 1
-    await menu_send_msg(update, context)
+    await menu_send_msg(update, context, True)
     return states.PRODUCTS_COURUSEL
 
 

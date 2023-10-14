@@ -26,8 +26,8 @@ class Product(base):
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     name = Column(String(256))
-    image = Column(DateTime)
-    description = Column(DateTime)
+    image = Column(String(256))
+    description = Column(Text)
     cost = Column(Integer)
 
 

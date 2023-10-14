@@ -16,13 +16,13 @@ def user_access_control(func):
                 .filter(User.tg_id == update.effective_chat.id)
                 .first()
             )
-            if user.phone:
+            if user and user.phone:
                 context.user_data["is_authorized"] = True
                 return await func(update, context)
             else:
                 keyboard = []
                 keyboard.append(
-                    KeyboardButton("Отправить контакт", request_contact=True)
+                    [KeyboardButton("Отправить контакт", request_contact=True)]
                 )
                 await update.effective_chat.send_message(
                     user_messages["user_access_control_0"],
