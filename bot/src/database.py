@@ -18,7 +18,7 @@ class User(base):
     username = Column(String(256))
     phone = Column(String(256))
     created_at = Column(DateTime)
-    is_manager = Column(Boolean)
+    is_manager = Column(Boolean, default=False)
 
 
 class Product(base):
@@ -38,7 +38,7 @@ class Order(base):
     tg_id = Column(BigInteger)
     username = Column(String(256))
     basket = Column(JSON)
-    geo = Column(Text)
+    geo = Column(JSON)
     status = Column(String(128), default="Создан")
     phone = Column(String(256))
     created_at = Column(DateTime)

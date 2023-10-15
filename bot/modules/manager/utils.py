@@ -8,7 +8,7 @@ def admin_access_control(func):
     async def inner(update: Update, context: CallbackContext):
         is_manager = context.user_data.get("is_manager")
         if is_manager:
-            return func(update, context)
+            return await func(update, context)
         with session_maker() as session:
             user = (
                 session.query(User)

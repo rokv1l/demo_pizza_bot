@@ -9,7 +9,7 @@ def user_access_control(func):
     async def inner(update: Update, context: CallbackContext):
         is_authorized = context.user_data.get("is_authorized")
         if is_authorized:
-            return func(update, context)
+            return await func(update, context)
         with session_maker() as session:
             user = (
                 session.query(User)
