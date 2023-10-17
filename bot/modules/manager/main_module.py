@@ -51,7 +51,7 @@ async def send_message_callback(update: Update, context: CallbackContext) -> int
     keyboard = [[InlineKeyboardButton("Выход", callback_data="exit")]]
     if update.callback_query:
         context.user_data["target_user"] = None
-        await update.effective_chat.send_message(
+        context.user_data["msg_for_del_keys"] = await update.effective_chat.send_message(
             admin_messages["send_message_callback_0"],
             reply_markup=InlineKeyboardMarkup(keyboard),
         )
@@ -61,7 +61,7 @@ async def send_message_callback(update: Update, context: CallbackContext) -> int
         with session_maker() as session:
             user = session.query(User).filter(User.tg_id == tg_id).first()
             if not user:
-                await update.effective_chat.send_message(
+                context.user_data["msg_for_del_keys"] = await update.effective_chat.send_message(
                     admin_messages["send_message_callback_1"],
                     reply_markup=InlineKeyboardMarkup(keyboard),
                 )
@@ -197,7 +197,6 @@ async def order_send_msg(update: Update, context: CallbackContext, edit=False) -
 
 async def order_action_callback(update: Update, context: CallbackContext) -> int:
     logger.info(f"user {update.effective_chat.id} order_action_callback")
-    await delete_old_keyboard(context, update.effective_chat.id)
     data = update.callback_query.data
     context.user_data["current_order"] = data
     await order_send_msg(update, context, True)

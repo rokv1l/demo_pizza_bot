@@ -267,6 +267,17 @@ async def make_order_callback(update: Update, context: CallbackContext) -> None:
     return ConversationHandler.END
 
 
+async def back_callback(update: Update, context: CallbackContext) -> None:
+    logger.info(f"user {update.effective_chat.id} back_callback")
+    if context.user_data.get("msg_for_del_keys"):
+        await menu_send_msg(update, context, True)
+    else:
+        await delete_old_keyboard(context, update.effective_chat.id)
+        await delete_old_keyboard_special(context, update.effective_chat.id)
+        await menu_send_msg(update, context)
+    return states.PRODUCTS_COURUSEL
+
+
 async def exit_callback(update: Update, context: CallbackContext) -> None:
     logger.info(f"user {update.effective_chat.id} exit_callback")
     await delete_old_keyboard(context, update.effective_chat.id)
@@ -296,7 +307,7 @@ menu_handler = ConversationHandler(
         ],
     },
     fallbacks=[
-        CallbackQueryHandler(menu_send_msg, r"back"),
+        CallbackQueryHandler(back_callback, r"back"),
         CallbackQueryHandler(exit_callback, r"exit"),
     ],
 )
